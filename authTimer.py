@@ -10,6 +10,7 @@ parser = argparse.ArgumentParser(description='Simple brute-force timing attack t
 # Required positional arguments
 parser.add_argument('-w', '--wordlist', type=str, help='Wordlist file with the list of usernames.')
 parser.add_argument('-u', '--url', type=str, help='Target URL with login form to attack.')
+parser.add_argument('-n', '--rounds', type=int, default=5, help='Target URL with login form to attack.')
 
 # Optional positional argument
 # parser.add_argument('-n', 'nrounds', type=int, help='Number of rounds to iterate through (Default: 100).')
@@ -19,8 +20,6 @@ args = parser.parse_args()
 
 # define a fake headers to present ourself as Chromium browser, change if needed
 headers = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36"}
-
-rounds = 5
 
 """
 wordlist is expected as simple list, we keep this function to have it ready if needed.
@@ -36,7 +35,7 @@ def unpack(fline):
 """
 our PHP example accepts requests via POST, and requires parameters as userid and passwd
 """
-def do_average_req(url, userid, passwd, headers):
+def do_average_req(url, userid, passwd, headers, rounds):
     data = {"userid": userid, "passwd": passwd, "submit": "submit"}
     total_time = 0
     average_time = 0
@@ -78,9 +77,7 @@ def main():
 
             # call do_req() to do the HTTP request
             # perform a number of rounds and get average time
-            res = do_average_req(url, userid, passwd, headers)
+            res = do_average_req(url, userid, passwd, headers, args.rounds)
 
 if __name__ == "__main__":
     main()
-
-
