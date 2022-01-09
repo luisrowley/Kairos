@@ -1,2 +1,2 @@
-userfields = ['user', 'userid', 'username', 'usuario', 'userstr', 'uservalue']
-passfields = ['pass', 'passwd', 'password', 'contraseña', 'secret', 'key', 'secretkey']
+userfields = ['user', 'userid', 'username', 'usuario', 'userstr', 'uservalue', 'uname', 'emailname', 'txt_uname', 'txtuname', 'txt_uname_email', 'nametext', 'nametxt']
+passfields = ['pass', 'passwd', 'password', 'contraseña', 'secret', 'key', 'secretkey', 'passtxt', 'passwordtext', 'passtext', 'txt_pass', 'txtpass', 'txt_password']
