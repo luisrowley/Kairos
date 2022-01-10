@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
-import sys
 import requests
-import os.path
-import validators
+from argchecker import ArgumentChecker
 from utils import unpack
-from argparser import args
 from samplelists.formfields import userfields, passfields
 
 class Requester():
     def __init__(self):
         # get parsed arguments
-        self.args = args
+        argchecker = ArgumentChecker()
+        self.args = argchecker.getArgs()
+        self.validFileName, self.validUrl = argchecker.parse()
 
         # define a fake headers to present ourself as Chromium browser, change if needed
         self.headers = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36"}
@@ -33,7 +32,7 @@ class Requester():
                 passfield='name="{}"'.format(passfields[y])
                 if userfield in res.text and passfield in res.text:
                     # TODO: implement caching system for valid fields
-                    print("[+] Correct combination found! ", userfields[x], passfields[y])
+                    print("[+] Correct combination found!", userfields[x], passfields[y])
                     return userfields[x], passfields[y]
 
     """
@@ -56,23 +55,11 @@ class Requester():
             # TODO: calculate max percentual change between requests and suggest greater n factor
         return True
 
+    """
+    Send POST request to endpoint based on known user/pass field name params
+    """
     def send(self):
-        # check if this script has been runned with an argument, and the argument exists and is a file
-        if self.args.wordlist and (len(self.args.wordlist) > 1) and (os.path.isfile(self.args.wordlist)):
-            fname = self.args.wordlist
-        else:
-            print("[!] Please provide a wordlist.")
-            print("[-] Usage: python3 {} -w /path/to/wordlist".format(sys.argv[0]))
-            sys.exit()
-
-        if self.args.url and (len(self.args.url) > 1) and validators.url(self.args.url):
-            url = self.args.url
-        else:
-            print("[!] Please provide a valid URL.")
-            print("[-] Usage: python3 {} -u http://target.url".format(sys.argv[0]))
-            sys.exit()
-
-        with open(fname) as fh:
+        with open(self.validFileName) as fh:
             # read file line by line
             for fline in fh:
                 # skip line if it starts with a comment
@@ -83,9 +70,4 @@ class Requester():
 
                 # perform a number of rounds and get average time
                 # TODO: implement multi-threading
-                res = self.do_average_post_request(url, userid, passwd, self.headers, self.args.rounds)
-
-if __name__ == "__main__":
-    requester = Requester()
-    requester.send()
-        
+                res = self.do_average_post_request(self.validUrl, userid, passwd, self.headers, self.args.rounds)
