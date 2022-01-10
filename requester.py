@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+import os
 import requests
 from argchecker import ArgumentChecker
+from cacheBuilder import CacheBuilder
 from utils import unpack
 from samplelists.formfields import userfields, passfields
 
@@ -10,6 +12,9 @@ class Requester():
         argchecker = ArgumentChecker()
         self.args = argchecker.getArgs()
         self.validFileName, self.validUrl = argchecker.parse()
+        
+        # cache builder instance
+        self.cache = CacheBuilder()        
 
         # define a fake headers to present ourself as Chromium browser, change if needed
         self.headers = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36"}
@@ -31,8 +36,18 @@ class Requester():
                 userfield='name="{}"'.format(userfields[x])
                 passfield='name="{}"'.format(passfields[y])
                 if userfield in res.text and passfield in res.text:
-                    # TODO: implement caching system for valid fields
                     print("[+] Correct combination found!", userfields[x], passfields[y])
+                    if not os.path.isfile("cache.json"):
+                        print("[-] Creating cache entry for {}".format(url))
+                        data = {}
+                        data['domain'] = []
+                        data['domain'].append({
+                            'url': url,
+                            'userfield': userfields[x],
+                            'passfield': passfields[y]
+                        })
+                        self.cache.createCache('cache.json', data)
+
                     return userfields[x], passfields[y]
 
     """
