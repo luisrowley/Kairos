@@ -3,7 +3,7 @@ import os
 import requests
 from argchecker import ArgumentChecker
 from cacheBuilder import CacheBuilder
-from utils import unpack
+from utils import generateDomainID, unpack
 from samplelists.formfields import userfields, passfields
 
 class Requester():
@@ -30,25 +30,23 @@ class Requester():
         res = requests.post(url, headers=self.headers, data=data)
         print("[-] Finding valid user/pass field names...")
 
-        # look for matching fieldnames from page source
-        for x in range(len(userfields)):
-            for y in range(len(passfields)):
-                userfield='name="{}"'.format(userfields[x])
-                passfield='name="{}"'.format(passfields[y])
-                if userfield in res.text and passfield in res.text:
-                    print("[+] Correct combination found!", userfields[x], passfields[y])
-                    if not os.path.isfile("cache.json"):
+        if os.path.isfile("cache.json"):
+            domain = generateDomainID(url)
+            validfields = self.cache.readCache(domain)
+            print('[-] Fields from cache:', validfields[0], validfields[1])
+            return validfields
+        else:
+            # look for matching fieldnames from page source
+            for x in range(len(userfields)):
+                for y in range(len(passfields)):
+                    userfield='name="{}"'.format(userfields[x])
+                    passfield='name="{}"'.format(passfields[y])
+                
+                    if userfield in res.text and passfield in res.text:
+                        print("[+] Correct combination found!", userfields[x], passfields[y])
                         print("[-] Creating cache entry for {}".format(url))
-                        data = {}
-                        data['domain'] = []
-                        data['domain'].append({
-                            'url': url,
-                            'userfield': userfields[x],
-                            'passfield': passfields[y]
-                        })
-                        self.cache.createCache('cache.json', data)
-
-                    return userfields[x], passfields[y]
+                        self.cache.writeCache(url, userfields[x], passfields[y])
+                        return userfields[x], passfields[y]
 
     """
     Send POST request to endpoint based on known user/pass field name params
