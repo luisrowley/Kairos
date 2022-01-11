@@ -21,11 +21,11 @@ class CacheBuilder():
             json.dump(data, jsonFile)
             
     def readCache(self, domain):
+        userfield = ''
+        passfield = ''
         with open(self.name) as jsonFile:
             data = json.load(jsonFile)
-            userfield = ''
-            passfield = ''
             for d in data[domain]:
                 userfield = d['userfield']
                 passfield = d['passfield']
-            return userfield, passfield
+        return userfield, passfield
