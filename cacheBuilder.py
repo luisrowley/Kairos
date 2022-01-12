@@ -1,5 +1,5 @@
 import json
-from utils import generateDomainID
+from shared.utils import generateDomainID
 
 """
 Perform checks against possible username/password field names and get valid ones

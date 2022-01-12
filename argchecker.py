@@ -4,7 +4,7 @@ import os
 import sys
 import validators
 
-from constants import DEFAULT_METHOD, MIN_ROUNDS
+from shared.constants import DEFAULT_METHOD, MIN_ROUNDS
 
 class ArgumentChecker():
     

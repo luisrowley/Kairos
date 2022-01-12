@@ -3,7 +3,7 @@ import os
 import requests
 from argchecker import ArgumentChecker
 from cacheBuilder import CacheBuilder
-from utils import generateDomainID, unpack
+from shared.utils import generateDomainID, unpack
 from samplelists.formfields import userfields, passfields
 
 class Requester():
