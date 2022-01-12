@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 import os
+import sys
 import requests
 from argchecker import ArgumentChecker
 from cacheBuilder import CacheBuilder
-from shared.utils import generateDomainID, unpack
+from shared.utils import generateDomainID, maxDelta, unpack
 from samplelists.formfields import userfields, passfields
 
 class Requester():
@@ -19,8 +20,12 @@ class Requester():
         # define a fake headers to present ourself as Chromium browser, change if needed
         self.headers = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36"}
         
+        # get valid input fields
         self.userfield, self.passfield = self.preflight_request(self.args.url)
 
+        # save average time for each user/pass combo
+        self.averageTimes = []
+        
     """
     Perform checks against possible username/password field names and get valid ones
     """
@@ -47,6 +52,9 @@ class Requester():
                         print("[-] Creating cache entry for {}".format(url))
                         self.cache.writeCache(url, userfields[x], passfields[y])
                         return userfields[x], passfields[y]
+                    else:
+                        print("[!] Error: could not find valid form field names to send request.")
+                        sys.exit()
 
     """
     Send POST request to endpoint based on known user/pass field name params
@@ -64,6 +72,8 @@ class Requester():
                 total_time += res.elapsed.total_seconds()
 
             average_time = total_time / rounds
+            # save average time for this rounds
+            self.averageTimes.append(average_time)
             print("[+] user {:15}; rounds {}; average time {}".format(userid, rounds, average_time))
             # TODO: calculate max percentual change between requests and suggest greater n factor
         return True
@@ -83,4 +93,6 @@ class Requester():
 
                 # perform a number of rounds and get average time
                 # TODO: implement multi-threading
-                res = self.do_average_post_request(self.validUrl, userid, passwd, self.headers, self.args.rounds)
+                self.do_average_post_request(self.validUrl, userid, passwd, self.headers, self.args.rounds)
+
+        print(maxDelta([2,3,9,1,12,6,2]))
