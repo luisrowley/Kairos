@@ -4,7 +4,10 @@ import os
 import sys
 import validators
 
+from constants import DEFAULT_METHOD, MIN_ROUNDS
+
 class ArgumentChecker():
+    
     def __init__(self):
         # Instantiate the parser
         parser = argparse.ArgumentParser(description='Simple brute-force timing attack to get valid username based on average-time after n login requests.')
@@ -14,8 +17,8 @@ class ArgumentChecker():
         parser.add_argument('-u', '--url', type=str, help='Target URL with login form to attack.')
 
         # Optional positional argument
-        parser.add_argument('-n', '--rounds', type=int, default=5, help='Number of attempts per userID to gain statistical significance (default 5).')
-        parser.add_argument('-X', '--http-method', type=str, default='POST', help='Specifies the HTTP method for the request (defaults to POST).')
+        parser.add_argument('-n', '--rounds', type=int, default=MIN_ROUNDS, help='Number of attempts per userID to gain statistical significance (default 5).')
+        parser.add_argument('-X', '--http-method', type=str, default=DEFAULT_METHOD, help='Specifies the HTTP method for the request (defaults to POST).')
 
         # Parse arguments
         self.args = parser.parse_args()
@@ -35,15 +38,18 @@ class ArgumentChecker():
         if self.args.wordlist and (len(self.args.wordlist) > 1) and (os.path.isfile(self.args.wordlist)):
             fname = self.args.wordlist
         else:
-            print("[!] Please provide a wordlist.")
+            print("[!] Error: please provide a wordlist.")
             print("[-] Usage: python3 {} -w /path/to/wordlist".format(sys.argv[0]))
             sys.exit()
 
         if self.args.url and (len(self.args.url) > 1) and validators.url(self.args.url):
             url = self.args.url
         else:
-            print("[!] Please provide a valid URL.")
+            print("[!] Error: please provide a valid URL.")
             print("[-] Usage: python3 {} -u http://target.url".format(sys.argv[0]))
             sys.exit()
+            
+        if self.args.rounds < MIN_ROUNDS:
+            print("[!] Warning: less than {} rounds can't guarantee robust results.".format(MIN_ROUNDS))
             
         return fname, url
