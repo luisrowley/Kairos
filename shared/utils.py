@@ -32,5 +32,11 @@ class Utils():
     """
     Simple average calculate
     """
-    def calculateAverage(total, rounds):
+    def simpleAverage(total, rounds):
         return total / rounds
+    
+    """
+    List average calculate
+    """
+    def listAverage(list):
+        return sum(list) / len(list)

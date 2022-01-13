@@ -72,7 +72,7 @@ class Requester():
                 res = requests.post(url, headers=headers, data=data)
                 total_time += res.elapsed.total_seconds()
 
-            average_time = Utils.calculateAverage(total_time, rounds)
+            average_time = Utils.simpleAverage(total_time, rounds)
             # save average time for this rounds
             self.averageTimes.append(average_time)
             print("[+] user {:15}; rounds {}; average time {}".format(userid, rounds, average_time))
@@ -97,4 +97,4 @@ class Requester():
                 # TODO: implement multi-threading
                 self.do_average_post_request(self.validUrl, userid, passwd, self.headers, self.args.rounds)
 
-        print(Utils.maxDelta(self.averageTimes))
+        print(Utils.listAverage(self.averageTimes), Utils.maxDelta(self.averageTimes))
