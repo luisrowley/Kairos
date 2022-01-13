@@ -4,7 +4,7 @@ import sys
 import requests
 from argchecker import ArgumentChecker
 from cacheBuilder import CacheBuilder
-from shared.utils import generateDomainID, maxDelta, unpack
+from shared.utils import Utils
 from samplelists.formfields import userfields, passfields
 
 class Requester():
@@ -36,7 +36,7 @@ class Requester():
         print("[-] Finding valid user/pass field names...")
 
         if os.path.isfile("cache.json"):
-            domain = generateDomainID(url)
+            domain = Utils.generateDomainID(url)
             validfields = self.cache.readCache(domain)
             print('[-] Fields from cache:', validfields[0], validfields[1])
             return validfields
@@ -65,13 +65,12 @@ class Requester():
         else:
             data = {self.userfield: userid, self.passfield: passwd, "submit": "submit"}
             total_time = 0
-            average_time = 0
 
             for x in range(rounds):
                 res = requests.post(url, headers=headers, data=data)
                 total_time += res.elapsed.total_seconds()
 
-            average_time = total_time / rounds
+            average_time = Utils.calculateAverage(total_time, rounds)
             # save average time for this rounds
             self.averageTimes.append(average_time)
             print("[+] user {:15}; rounds {}; average time {}".format(userid, rounds, average_time))
@@ -89,10 +88,10 @@ class Requester():
                 if fline.startswith("#"):
                     continue
                 # extract userid and password from wordlist, removing trailing newline
-                userid, passwd = unpack(fline.rstrip())
+                userid, passwd = Utils.unpack(fline.rstrip())
 
                 # perform a number of rounds and get average time
                 # TODO: implement multi-threading
                 self.do_average_post_request(self.validUrl, userid, passwd, self.headers, self.args.rounds)
 
-        print(maxDelta([2,3,9,1,12,6,2]))
+        print(Utils.maxDelta(self.averageTimes))

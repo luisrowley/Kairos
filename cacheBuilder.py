@@ -1,5 +1,5 @@
 import json
-from shared.utils import generateDomainID
+from shared.utils import Utils
 
 """
 Perform checks against possible username/password field names and get valid ones
@@ -10,7 +10,7 @@ class CacheBuilder():
         
     def writeCache(self, url, userfield, passfield):
         with open(self.name, "w") as jsonFile:
-            domainID = generateDomainID(url)
+            domainID = Utils.generateDomainID(url)
             data = {}
             data[domainID] = []
             data[domainID].append({
