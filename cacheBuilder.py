@@ -23,9 +23,16 @@ class CacheBuilder():
     def readCache(self, domain):
         userfield = ''
         passfield = ''
-        with open(self.name) as jsonFile:
-            data = json.load(jsonFile)
-            for d in data[domain]:
-                userfield = d['userfield']
-                passfield = d['passfield']
+        data = self.getFileData()
+        for d in data[domain]:
+            userfield = d['userfield']
+            passfield = d['passfield']
         return userfield, passfield
+
+    def checkEntry(self, key):
+        list = self.getFileData()
+        return key in list
+    
+    def getFileData(self):
+        with open(self.name) as jsonFile:
+            return json.load(jsonFile)

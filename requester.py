@@ -25,7 +25,8 @@ class Requester():
 
         # save average time for each user/pass combo
         self.averageTimes = []
-        
+
+     
     """
     Perform checks against possible username/password field names and get valid ones
     """
@@ -33,28 +34,29 @@ class Requester():
         # perform target URL request one time
         data={'username': 'foo', 'password': 'foobar', "submit": "submit"}
         res = requests.post(url, headers=self.headers, data=data)
+        domain = Utils.generateDomainID(url)
+
         print("[-] Finding valid user/pass field names...")
 
-        if os.path.isfile("cache.json"):
-            domain = Utils.generateDomainID(url)
+        # check if entry exists in the cache
+        if os.path.isfile("cache.json") and self.cache.checkEntry(domain):
             validfields = self.cache.readCache(domain)
             print('[-] Fields from cache:', validfields[0], validfields[1])
             return validfields
-        else:
-            # look for matching fieldnames from page source
-            for x in range(len(userfields)):
-                for y in range(len(passfields)):
-                    userfield='name="{}"'.format(userfields[x])
-                    passfield='name="{}"'.format(passfields[y])
-                
-                    if userfield in res.text and passfield in res.text:
-                        print("[+] Correct combination found!", userfields[x], passfields[y])
-                        print("[-] Creating cache entry for {}".format(url))
-                        self.cache.writeCache(url, userfields[x], passfields[y])
-                        return userfields[x], passfields[y]
-                    else:
-                        print("[!] Error: could not find valid form field names to send request.")
-                        sys.exit()
+        # look for matching fieldnames from page source
+        for x in range(len(userfields)):
+            for y in range(len(passfields)):
+                userfield='name="{}"'.format(userfields[x])
+                passfield='name="{}"'.format(passfields[y])
+                if userfield in res.text and passfield in res.text:
+                    print("[+] Correct combination found!", userfields[x], passfields[y])
+                    print("[-] Creating cache entry for {}".format(url))
+                    self.cache.writeCache(url, userfields[x], passfields[y])
+                    return userfields[x], passfields[y]
+        # no matching form fields then exit
+        print("[!] Error: could not find valid form field names to send request.")
+        sys.exit()
+
 
     """
     Send POST request to endpoint based on known user/pass field name params
@@ -76,6 +78,7 @@ class Requester():
             print("[+] user {:15}; rounds {}; average time {}".format(userid, rounds, average_time))
             # TODO: calculate max percentual change between requests and suggest greater n factor
         return True
+
 
     """
     Send POST request to endpoint based on known user/pass field name params
