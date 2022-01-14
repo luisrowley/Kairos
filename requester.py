@@ -5,6 +5,7 @@ import requests
 import statistics
 from argchecker import ArgumentChecker
 from cacheBuilder import CacheBuilder
+from informer import Informer
 from shared.utils import Utils
 from samplelists.formfields import userfields, passfields
 
@@ -83,21 +84,6 @@ class Requester():
     """
     Send POST request to endpoint based on known user/pass field name params
     """
-    def print_response_times_data(self, times):
-        median = statistics.median(times)
-        maxDelta = Utils.maxDelta(times)
-        maxRatio = maxDelta / median
-        print("\n>> Max Time Diff: {}".format(maxDelta))
-        print(">> Median time:   {}".format(median))
-        print(">> MaxDiff ratio: {:.2f}".format(maxRatio * 100) + "%")
-        if maxRatio < 10.0:
-            print("\n[!] Warning: Max Time Difference to median is too low ( < 10% ).")
-            print("[!] The site may not be vulnerable or no user existed from given list.")
-
-
-    """
-    Send POST request to endpoint based on known user/pass field name params
-    """
     def send(self):
         with open(self.validFileName) as fh:
             # read file line by line
@@ -110,6 +96,6 @@ class Requester():
 
                 # perform a number of rounds and get average time
                 # TODO: implement multi-threading
-                self.get_average_request_times(self.validUrl, userid, passwd, self.headers, self.args.rounds)
-
-        self.print_response_times_data(self.averageTimes.values())
+                requests = self.get_average_request_times(self.validUrl, userid, passwd, self.headers, self.args.rounds)
+        if requests:
+            Informer.print_response_times_data(self.averageTimes.values())
