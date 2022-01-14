@@ -19,14 +19,16 @@ class Utils():
     """
     Provides the maximum difference between elements of an unordered list
     """
-    def maxDelta(list):
-        tempMin = list[0]
+    def maxDelta(vList):
+        if not isinstance(vList, list):
+            vList = list(vList) 
+        tempMin = vList[0]
         maxDiff = 0
-        for i in range(len(list)):
-            if (list[i] < tempMin):
-                tempMin = list[i]
-            elif (list[i] - tempMin > maxDiff):
-                maxDiff = list[i] - tempMin
+        for i in range(len(vList)):
+            if (vList[i] < tempMin):
+                tempMin = vList[i]
+            elif (vList[i] - tempMin > maxDiff):
+                maxDiff = vList[i] - tempMin
         return maxDiff
 
 

@@ -25,7 +25,7 @@ class Requester():
         self.userfield, self.passfield = self.preflight_request(self.args.url)
 
         # save average time for each user/pass combo
-        self.averageTimes = []
+        self.averageTimes = {}
 
      
     """
@@ -62,23 +62,37 @@ class Requester():
     """
     Send POST request to endpoint based on known user/pass field name params
     """
-    def do_average_post_request(self, url, userid, passwd, headers, rounds):       
+    def get_average_request_times(self, url, userid, passwd, headers, rounds):             
         if not self.userfield and not self.passfield:
             return False
         else:
             data = {self.userfield: userid, self.passfield: passwd, "submit": "submit"}
-            response_times = []
 
             for x in range(rounds):
+                response_times = []
                 res = requests.post(url, headers=headers, data=data)
                 response_times.append(res.elapsed.total_seconds())
 
             average_time = statistics.median(response_times)
-            # save average time for this rounds
-            self.averageTimes.append(average_time)
-            print("[+] user {:15}; rounds {}; average time {}".format(userid, rounds, average_time))
+            # save average time for each user
+            self.averageTimes[userid] = average_time
+            print("[+] user {:20}; rounds {}; average time {}".format(userid, rounds, average_time))
             # TODO: calculate max percentual change between requests and suggest greater n factor
         return True
+
+    """
+    Send POST request to endpoint based on known user/pass field name params
+    """
+    def print_response_times_data(self, times):
+        median = statistics.median(times)
+        maxDelta = Utils.maxDelta(times)
+        maxRatio = maxDelta / median
+        print("\n>> Max Time Diff: {}".format(maxDelta))
+        print(">> Median time:   {}".format(median))
+        print(">> MaxDiff ratio: {:.2f}".format(maxRatio * 100) + "%")
+        if maxRatio < 10.0:
+            print("\n[!] Warning: Max Time Difference to median is too low ( < 10% ).")
+            print("[!] The site may not be vulnerable or no user existed from given list.")
 
 
     """
@@ -96,6 +110,6 @@ class Requester():
 
                 # perform a number of rounds and get average time
                 # TODO: implement multi-threading
-                self.do_average_post_request(self.validUrl, userid, passwd, self.headers, self.args.rounds)
+                self.get_average_request_times(self.validUrl, userid, passwd, self.headers, self.args.rounds)
 
-        print(statistics.median(self.averageTimes), Utils.maxDelta(self.averageTimes))
+        self.print_response_times_data(self.averageTimes.values())
