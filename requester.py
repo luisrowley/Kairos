@@ -2,6 +2,7 @@
 import os
 import sys
 import requests
+import statistics
 from argchecker import ArgumentChecker
 from cacheBuilder import CacheBuilder
 from shared.utils import Utils
@@ -66,13 +67,13 @@ class Requester():
             return False
         else:
             data = {self.userfield: userid, self.passfield: passwd, "submit": "submit"}
-            total_time = 0
+            response_times = []
 
             for x in range(rounds):
                 res = requests.post(url, headers=headers, data=data)
-                total_time += res.elapsed.total_seconds()
+                response_times.append(res.elapsed.total_seconds())
 
-            average_time = Utils.simpleAverage(total_time, rounds)
+            average_time = statistics.median(response_times)
             # save average time for this rounds
             self.averageTimes.append(average_time)
             print("[+] user {:15}; rounds {}; average time {}".format(userid, rounds, average_time))
@@ -97,4 +98,4 @@ class Requester():
                 # TODO: implement multi-threading
                 self.do_average_post_request(self.validUrl, userid, passwd, self.headers, self.args.rounds)
 
-        print(Utils.listAverage(self.averageTimes), Utils.maxDelta(self.averageTimes))
+        print(statistics.median(self.averageTimes), Utils.maxDelta(self.averageTimes))
