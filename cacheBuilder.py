@@ -29,6 +29,8 @@ class CacheBuilder():
             passfield = d['passfield']
         return userfield, passfield
 
+    # TODO: update cache method
+
     def checkEntry(self, key):
         list = self.getFileData()
         return key in list
