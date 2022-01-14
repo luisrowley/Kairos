@@ -29,14 +29,6 @@ class Utils():
                 maxDiff = list[i] - tempMin
         return maxDiff
 
-    """
-    Simple average calculate
-    """
-    def simpleAverage(total, rounds):
-        return total / rounds
+
     
-    """
-    List average calculate
-    """
-    def listAverage(list):
-        return sum(list) / len(list)
+    
