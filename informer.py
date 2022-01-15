@@ -14,9 +14,9 @@ class Informer():
         median = statistics.median(times)
         maxDelta = Utils.maxDelta(times)
         maxRatio = maxDelta / median
-        print("\n>> Max Time Diff: {:.6f}".format(maxDelta))
-        print(">> Median time:   {:.6f}".format(median))
-        print(">> MaxDiff ratio: {:.2f}".format(maxRatio * 100) + "%")
+        print("\n>> Max Time Diff:    {:.6f}".format(maxDelta))
+        print(">> Aggregate Median: {:.6f}".format(median))
+        # print(">> MaxDiff ratio: {:.2f}".format(maxRatio * 100) + "%")
         if maxRatio < 10.0:
             print(Colors.WARNING)
             print("\n[!] Warning: Max Time Difference to median is too low ( < 10% ).")

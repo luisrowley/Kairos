@@ -69,9 +69,11 @@ After sucessful page requests have been made, a small report is shown as the out
 
 The data is divided in three columns, with number of requests made (rounds) and average time for these. At the bottom we can find additional values such as the **Maximum time difference** between the longest and shortest time spans and the **Median** of all requests.
 
-We can optionally get a full report in which the most relevant values are highlighted in different colors:
+We can optionally get a detailed report in which the most relevant values are highlighted in different colors:
 
 ![Kairos detail test](img/kairos_test_detail.png)
+
+In the detailed report we calculate how each **average time value** deviates from the **aggregate median**, giving us a **Deviation factor**.
 
 In this example we can see how the **admin** user takes the longest time, highlighted as a found user.
 ## Caveats
