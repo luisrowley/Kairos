@@ -20,8 +20,7 @@ class Informer():
         if maxRatio < 10.0:
             print(Colors.WARNING)
             print("\n[!] Warning: Max Time Difference to median is too low ( < 10% ).")
-            print("[!] The site may not be vulnerable or no user existed from given list.")
-            print(Colors.WARNING)
+            print("[!] The site may not be vulnerable or no user existed from given list.\033[00m")
         report = input("\n[-] Scan done. Output full report? (y/N) \n")
         if report == 'y' or report == 'Y':
             self.print_per_user_data(median)
