@@ -23,7 +23,7 @@ class Informer():
             print("[!] The site may not be vulnerable or no user existed from given list.")
             print(Colors.WARNING)
         report = input("\n[-] Scan done. Output full report? (y/N) \n")
-        if report is 'y' or 'Y':
+        if report == 'y' or report == 'Y':
             self.print_per_user_data(median)
             
     """
