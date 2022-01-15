@@ -40,13 +40,42 @@ if ($user) {
 Therefore the **extra time** it takes for the backend system to compute the password hash allows us to determine if a user exists or not in the system independently of any log messages.
 
 ## Requirements
-[Python](https://www.python.org/downloads/) version > 3.6 or more
+[Python3](https://www.python.org/downloads/) (version > 3.6 or more)
 
 ## See it in action
 
 ### Launch sample Request
+```bash
+python3 kairos.py -w samplelists/usernames.txt -u http://mysite.com/login
+```
+
+This repository includes a short wordlist of usernames for testing purposes (under *samplelists/* folder). For a more in-depth analysis please consider providing a more complete list of your choice as long as it follows the same format.
+
+URL targets should be pages with standard login forms. Kairos will try to guess which **user** and **password** parameters are correct for as form input names and then it will craft the request based on these. If a correct **user/pass** combination is found, then the results are cached for that given URL domain and reused next time.
+
+Kairos sends the request for a given **user/pass** multiple times (n=10 by default) and then calculates the [median](https://en.wikipedia.org/wiki/Median) of those values to avoid network connection issues generating ***outliars***. The value of rounds ***n*** can be set higher to gain more robust statistics on the results:
+
+```bash
+python3 kairos.py -w samplelists/usernames.txt -u http://mysite.com/login -n 50
+```
+
+Please consider that incrementing the factor ***n*** will be very noisy on the target network, so use with precaution.
 
 ### Understanding the results
+
+After sucessful page requests have been made, a small report is shown as the output:
+
+![Kairos simple test](img/kairos_test_simple.png)
+
+The data is divided in three columns, with number of requests made (rounds) and average time for these. At the bottom we can find additional values such as the **Maximum time difference** between the longest and shortest time spans and the **Median** of all requests.
+
+We can optionally get a full report in which the most relevant values are highlighted in different colors:
+
+![Kairos detail test](img/kairos_test_detail.png)
+
+In this example we can see how the **admin** user takes the longest time, highlighted as a found user.
+## Caveats
+
 
 ## Disclaimer
 
