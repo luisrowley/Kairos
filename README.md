@@ -1,33 +1,23 @@
 # Kairos
-Vulnerability assesment tool for the web based on side-channel timing attacks.
-
-## Requirements
-
-[Python](https://www.python.org/downloads/) version > 3.6 or more
+Kairos is a vulnerability assesment tool for the web based on [side-channel](https://en.wikipedia.org/wiki/Side-channel_attack) timing attacks. This tool allows the researcher to find valid **user names** on a target web URL, given that the website login is flawed by design. 
 
 ## Usage
-
+```bash
+python3 kairos.py [-h] [-w WORDLIST] [-u URL] [-n ROUNDS] [-X HTTP_METHOD]
 ```
-python domain-finder.py [-h] [-i] [-l] [-c] [-n] [--version]
-```
-<b>Where: </b>
 
- -h, --help          show help message and exit
- 
-  -i, --input         Simple Lookup. Searches for availability of the
-                      specified domain name. (.com and .net top-level domains
-                      supported)
-                      
-  -l, --list-domains  Advanced search. This option takes in a list of space
-                      separated strings, generates all possible (and best)
-                      combinations between them, and then checks their
-                      avalability as domain names via DNS lookup.
-                      
-  -c, --com           Filter results by .com domains only.
-  
-  -n, --net           Filter results by .net domains only.
-  
-  --version           show program's version number and exit
-  
-  
-  ## See it in action
+## How does it work?
+This assessment tool relies on a structural flaw on the design of a login system in which the existence of a user is checked beforehand. In a vulnerable web, once a first call to check if a user exists is made to the backend, only then the system checks if the password matches and hashes the plain-text password submited by the user. Therefore the **extra time** it takes for the backend system to compute the password hash allows us to determine if a user exists or not in the system independently of any log messages.
+
+## Requirements
+[Python](https://www.python.org/downloads/) version > 3.6 or more
+
+## See it in action
+
+### Launch sample Request
+
+### Understanding the results
+
+## Disclaimer
+
+For educational purposes only. The author(s) is not responsible for any misuse or damage caused by this tool to any user(s) or third parties.
