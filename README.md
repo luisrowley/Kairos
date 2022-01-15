@@ -28,9 +28,13 @@ if ($user) {
       // user login is valid
 	...
   } else {
-    // error: wrong credentials
+    // error: wrong password
     ...
-  } 
+  }
+} else {
+// error: user doesn't exist
+...
+}  
 ```
 
 Therefore the **extra time** it takes for the backend system to compute the password hash allows us to determine if a user exists or not in the system independently of any log messages.
