@@ -30,7 +30,3 @@ class Utils():
             elif (vList[i] - tempMin > maxDiff):
                 maxDiff = vList[i] - tempMin
         return maxDiff
-
-
-    
-    

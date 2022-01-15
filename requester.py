@@ -77,7 +77,7 @@ class Requester():
             average_time = statistics.median(response_times)
             # save average time for each user
             self.averageTimes[userid] = average_time
-            print("[+] user {:20}; rounds {}; average time {}".format(userid, rounds, average_time))
+            print("[+] user {:20}| rounds {} | average time {}".format(userid, rounds, average_time))
             # TODO: calculate max percentual change between requests and suggest greater n factor
         return True
 
@@ -98,4 +98,5 @@ class Requester():
                 # TODO: implement multi-threading
                 requests = self.get_average_request_times(self.validUrl, userid, passwd, self.headers, self.args.rounds)
         if requests:
-            Informer.print_response_times_data(self.averageTimes.values())
+            informer = Informer(self.averageTimes)
+            informer.print_response_times_data(self.averageTimes.values())
