@@ -10,7 +10,8 @@ python3 kairos.py [-h] [-w WORDLIST] [-u URL] [-n ROUNDS] [-X HTTP_METHOD]
 This assessment tool relies on a structural flaw on the design of a login system in which the existence of a user is checked beforehand. In a vulnerable web, once a first call to check if a user exists is made to the backend, only then the system checks if the password matches and hashes the plain-text password submited by the user:
 
 ```php
-...
+<?php
+
 // get user from DB based in POST param
 $user = $db->query('SELECT * FROM users WHERE username="'.$_POST['userid'].'"');
 
