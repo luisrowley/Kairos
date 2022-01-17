@@ -10,7 +10,7 @@ git clone https://github.com/luisrowley/Kairos
 ```bash
 cd Kairos
 ```
-2) Install project's dependencies with just:
+3) Install project's dependencies with just:
 ```bash
 python3 -m pip install -r requirements.txt
 ```
@@ -93,10 +93,10 @@ In the detailed report we calculate how each **average time value** deviates fro
 In this example we can see how the **admin** user takes the longest time, highlighted as a found user.
 ## Caveats
 
-As with many other tools, there are challenges to overcome. One of them could be that the web application has in place some tipe of Web-based firewall or [WAF](https://www.cloudflare.com/learning/ddos/glossary/web-application-firewall-waf/) limiting the nummber of requests for automated scripts.
+As with many other tools, there are challenges to overcome. One of them could be that the web application has in place some tipe of Web-based firewall or [WAF](https://www.cloudflare.com/learning/ddos/glossary/web-application-firewall-waf/) limiting the number of requests for automated scripts.
 
 There is also the possibility of a web app system that is well-designed in a way that is not vulnarable to this attack, for instance calculating the password hash also beforehand, thus fixing response time to worst case execution time (this would have a very negative performance impact on the application).
 
 ## Disclaimer
 
-For educational purposes only. The author(s) is not responsible for any misuse or damage caused by this tool to any user(s) or third parties.
+For educational purposes only. The author(s) are not responsible for any misuse or damage caused by this tool to any user(s) or third parties.
