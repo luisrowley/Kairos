@@ -2,6 +2,15 @@
 Kairos is a vulnerability assessment tool for the web based on [side-channel timing attacks](https://en.wikipedia.org/wiki/Side-channel_attack). This tool allows the researcher to find valid **user names** on a target web URL, given that the website login is flawed by design. 
 
 ## Installation
+1) Clone this repo:
+```bash
+git clone https://github.com/luisrowley/Kairos
+```
+2) Navigate to project folder:
+```bash
+cd Kairos
+```
+2) Install project's dependencies with just:
 ```bash
 python3 -m pip install -r requirements.txt
 ```
