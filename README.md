@@ -1,6 +1,11 @@
 # Kairos
 Kairos is a vulnerability assessment tool for the web based on [side-channel timing attacks](https://en.wikipedia.org/wiki/Side-channel_attack). This tool allows the researcher to find valid **user names** on a target web URL, given that the website login is flawed by design. 
 
+## Installation
+```bash
+python3 -m pip install -r requirements.txt
+```
+
 ## Usage
 ```bash
 python3 kairos.py [-h] [-w WORDLIST] [-u URL] [-n ROUNDS] [-X HTTP_METHOD]
@@ -40,7 +45,8 @@ if ($user) {
 Therefore the **extra time** it takes for the backend system to compute the password hash allows us to determine if a user exists or not in the system independently of any log messages.
 
 ## Requirements
-[Python3](https://www.python.org/downloads/) (version > 3.6 or more)
+- [Python3](https://www.python.org/downloads/) (version > 3.6 or more)
+- [pip](https://pypi.org/project/pip/) to the latest version
 
 ## See it in action
 
