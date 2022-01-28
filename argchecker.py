@@ -20,7 +20,7 @@ class ArgumentChecker():
         # Optional positional arguments
         parser.add_argument('-n', '--rounds', type=int, default=MIN_ROUNDS, help='Number of attempts per userID to gain statistical significance (default 5).')
         parser.add_argument('-X', '--http-method', type=str, default=DEFAULT_METHOD, help='Specifies the HTTP method for the request (defaults to POST).')
-        parser.add_argument('-d', '--data', type=str, default='', help='Comma-separated data containing user and password field names. Example: -d userfield,passfield')
+        parser.add_argument('-d', '--field-data', type=str, default='', help='Comma-separated data containing user and password field names. Example: -d userfield,passfield')
 
         # Parse arguments
         self.args = parser.parse_args()
