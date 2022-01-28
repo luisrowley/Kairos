@@ -23,7 +23,10 @@ class Requester():
         self.headers = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36"}
         
         # get valid input fields
-        self.userfield, self.passfield = self.preflight_request(self.args.url)
+        if self.args.data:
+            self.userfield, self.passfield = self.args.userfield, self.args.passfield
+        else:
+            self.userfield, self.passfield = self.preflight_request(self.args.url)
 
         # save average time for each user/pass combo
         self.averageTimes = {}
