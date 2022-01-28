@@ -76,11 +76,13 @@ python3 kairos.py -w samplelists/usernames.txt -u http://mysite.com/login -n 50
 
 Please consider that incrementing the factor ***n*** will be very noisy on the target network, so use with precaution.
 
-Optionally you can also manually indicate the name and password input fields for the request like so (you can find these by intercepting the request with **Burp** or **Chrome Devtools -> Network tab** for instance):
+Optionally you can also manually indicate the name and password input fields for the request like this:
 
 ```bash
 python3 kairos.py -w samplelists/usernames.txt -u http://mysite.com/login -n 50 -d userfield,passfield
 ```
+
+Remember you can find these by intercepting the request with **Burp** or **Chrome Devtools -> Network tab** for instance.
 
 ### Understanding the results
 
