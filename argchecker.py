@@ -20,22 +20,22 @@ class ArgumentChecker():
         # Optional positional arguments
         parser.add_argument('-n', '--rounds', type=int, default=MIN_ROUNDS, help='Number of attempts per userID to gain statistical significance (default 5).')
         parser.add_argument('-X', '--http-method', type=str, default=DEFAULT_METHOD, help='Specifies the HTTP method for the request (defaults to POST).')
-        parser.add_argument('-d', '--field-data', type=str, default='', help='Comma-separated data containing user and password field names. Example: -d userfield,passfield')
+        parser.add_argument('-d', '--fieldata', type=str, default='', help='Comma-separated data containing user and password field names. Example: -d userfield,passfield')
 
         # Parse arguments
         self.args = parser.parse_args()
 
-        if self.args.data:
-            self.args.userfield = self.args.data.split(',')[0]
-            self.args.passfield = self.args.data.split(',')[-1]
+        if self.args.fieldata:
+            self.args.userfield = self.args.fieldata.split(',')[0]
+            self.args.passfield = self.args.fieldata.split(',')[-1]
         else:
-            self.args.data = ''
+            self.args.fieldata = ''
 
 
     """
     Simple getter function for arguments
     """
-    def getArgs(self):   
+    def getArgs(self):
         return self.args
 
     """
